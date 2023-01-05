@@ -3,9 +3,13 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Product;
+use App\Form\ProductImageType;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 
 class ProductCrudController extends AbstractCrudController
@@ -18,12 +22,16 @@ class ProductCrudController extends AbstractCrudController
     
     public function configureFields(string $pageName): iterable
     {
+        yield FormField::addTab('Informations Générales');
         yield Field::new('name');
-        yield Field::new('price');
+        yield MoneyField::new('price')->setCurrency('EUR')->setStoredAsCents(false);
         yield AssociationField::new('category')->setRequired(false);
         yield TextEditorField::new('description')->hideOnIndex();
 
-
+        yield FormField::addTab('Images');
+        yield CollectionField::new('productImages')
+            ->setEntryType(ProductImageType::class)
+            ->hideOnIndex();
     
     }
     
